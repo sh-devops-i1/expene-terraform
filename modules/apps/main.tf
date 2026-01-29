@@ -26,8 +26,18 @@ resource "aws_route53_record" "record" {
   records = [aws_instance.instance.private_ip]
   ttl     = 30
 }
-# resource "null_resource" "ansible" {
-#   provisioner "remote-exec" {
-#
-#   }
-# }
+resource "null_resource" "ansible" {
+  provisioner "remote-exec" {
+    inline = [
+     "sudo pip3.11 install ansible",
+      "ansible-pull -i localhost, -U https://github.com/sh-devops-i1/expense-ansible.git -e env=$env -e role_name=$component expense.yml "
+    ]
+    connection {
+      type        = "ssh"
+      host        = aws_instance.instance.public_ip
+      user        = var.ssh_user
+      password    = var.ssh_password
+    }
+
+  }
+}
