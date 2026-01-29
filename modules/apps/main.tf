@@ -19,11 +19,13 @@ resource "aws_instance" "instance" {
   }
 }
 
-# resource "aws_route53_record" "record" {
-#   name    = ""
-#   type    = ""
-#   zone_id = ""
-# }
+resource "aws_route53_record" "record" {
+  name    = "${var.component}-${var.env}"
+  type    = "A"
+  zone_id = var.zone_id
+  records = [aws_instance.instance.private_ip]
+  ttl     = 30
+}
 # resource "null_resource" "ansible" {
 #   provisioner "remote-exec" {
 #
