@@ -17,6 +17,7 @@ resource "aws_instance" "instance" {
   tags = {
     Name = "${var.component}-${var.env}"
     monitor = "yes"
+    env     = var.env
   }
 }
 
