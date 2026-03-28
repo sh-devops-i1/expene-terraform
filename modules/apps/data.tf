@@ -10,7 +10,4 @@ data "aws_security_group" "selected" {
 data "vault_generic_secret" "mypass"{
   path = "expense-dev/test"
 }
-resource "local_file" "foo" {
-  content  = data.vault_generic_secret.mypass.data_json
-  filename = "/tmp/secrets"
-}
+
