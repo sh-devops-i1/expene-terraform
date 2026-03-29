@@ -1,4 +1,6 @@
 module "frontend" {
+  depends_on = [module.backend]
+
   source = "./modules/apps"
   env    = var.env
   instance_type = var.instance_type
@@ -7,6 +9,8 @@ module "frontend" {
 
 }
 module "backend" {
+  depends_on = [module.mysql]
+
   source = "./modules/apps"
   env    = var.env
   instance_type = var.instance_type
