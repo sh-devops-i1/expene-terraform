@@ -32,7 +32,8 @@ resource "null_resource" "ansible" {
   provisioner "remote-exec" {
     inline = [
      "sudo pip3.11 install ansible",
-      "ansible-pull -i localhost, -U https://github.com/sh-devops-i1/expense-ansible.git -e env=${var.env} -e role_name=${var.component} expense.yml "
+      "ansible-pull -i localhost, -U https://github.com/sh-devops-i1/expense-ansible.git -e env=${var.env} -e role_name=${var.component} get-secrets.yml -e  vault_token=${var.vault_token}",
+      "ansible-pull -i localhost, -U https://github.com/sh-devops-i1/expense-ansible.git -e env=${var.env} -e role_name=${var.component} expense.yml -e @secrets.json -e @app.json"
     ]
     connection {
       type        = "ssh"

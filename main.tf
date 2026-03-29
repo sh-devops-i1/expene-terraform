@@ -6,6 +6,7 @@ module "frontend" {
   instance_type = var.instance_type
   component = "frontend"
   zone_id = var.zone_id
+  vault_token   = var.vault_token
 
 }
 module "backend" {
@@ -16,6 +17,7 @@ module "backend" {
   instance_type = var.instance_type
   component = "backend"
   zone_id = var.zone_id
+  vault_token   = var.vault_token
 
 }
 module "mysql" {
@@ -24,4 +26,5 @@ module "mysql" {
   instance_type = var.instance_type
   component     = "mysql"
   zone_id       = var.zone_id
+  vault_token   = var.vault_token
 }
