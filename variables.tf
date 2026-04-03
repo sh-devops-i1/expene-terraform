@@ -5,3 +5,4 @@ variable "vault_token" {}
 
 #vpc
 variable "vpc_cidr_block" {}
+variable "subnet_cidr" {}
