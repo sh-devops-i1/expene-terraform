@@ -35,7 +35,28 @@ resource "aws_subnet" "frontend_main" {
   availability_zone = var.Availability_zones[count.index]
 
   tags = {
-    Name = "${var.env}-frontend-subnets-${count.index}"
+    Name = "${var.env}-frontend-subnets-${count.index+1}"
   }
 }
 
+resource "aws_subnet" "backend_subnet" {
+  count             = length(var.backend_subnets)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.backend_subnets[count.index]
+  availability_zone = var.Availability_zones[count.index]
+
+  tags = {
+    Name = "${var.env}-backend-subnets-${count.index+1}"
+  }
+}
+
+resource "aws_subnet" "db_subnets" {
+  count             = length(var.db_subnets)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.db_subnets[count.index]
+  availability_zone = var.Availability_zones[count.index]
+
+  tags = {
+    Name = "${var.env}-db_subnets-${count.index+1}"
+  }
+}
