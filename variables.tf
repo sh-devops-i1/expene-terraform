@@ -9,3 +9,7 @@ variable "subnet_cidr" {}
 variable "default_vpc_id" {}
 variable "default_rt_ID" {}
 variable "default_vpc_cidr_block" {}
+variable "Availability_zones" {}
+variable "frontend_subnets" {}
+variable "backend_subnets" {}
+variable "db_subnets" {}

@@ -5,12 +5,14 @@ resource "aws_vpc" "main" {
     Name = "${var.env}-vpc"
   }
 }
-resource "aws_subnet" "main" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = var.subnet_cidr
+resource "aws_subnet" "frontend_main" {
+  count             = length(var.frontend_subnets)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.frontend_subnets[count.index]
+  availability_zone = var.Availability_zones[count.index]
 
   tags = {
-    Name = "${var.env}-subnet"
+    Name = "${var.env}-frontend-subnets-${count.index}"
   }
 }
 resource "aws_vpc_peering_connection" "peer" {
