@@ -10,6 +10,28 @@ terraform {
     }
   }
 }
+
+resource "aws_security_group" "main-sg" {
+  name               = "sg"
+  vpc_id             = ""
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+
+  }
+  ingress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+
+  }
+
+}
+
 resource "aws_instance" "instance" {
   ami = data.aws_ami.ami.id
   vpc_security_group_ids = [data.aws_security_group.selected.id]
