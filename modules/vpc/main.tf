@@ -24,26 +24,6 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
-resource "aws_route_table" "r" {
-  vpc_id = aws_vpc.main.id
-
-  tags = {
-    Name = "test-rt"
-  }
-}
-
-resource "aws_route" "main" {
-  route_table_id            = aws_vpc.main.main_route_table_id                                              #var.default_rt_ID
-  destination_cidr_block    = var.default_vpc_cidr_block
-  vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
-}
-
-resource "aws_route" "default" {
-  route_table_id            = var.default_rt_ID
-  destination_cidr_block    = var.vpc_cidr_block
-  vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
-}
-
 resource "aws_subnet" "frontend_subnet" {
   count             = length(var.frontend_subnets)
   vpc_id            = aws_vpc.main.id
@@ -52,6 +32,17 @@ resource "aws_subnet" "frontend_subnet" {
 
   tags = {
     Name = "${var.env}-frontend-subnets-${count.index+1}"
+  }
+}
+resource "aws_route_table" "frontend-rt" {
+  count             = length(var.frontend_subnets)
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block = var.default_vpc_cidr_block
+    vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
+  }
+  tags = {
+    Name = "${var.env}-frontend-rt-${count.index + 1}"
   }
 }
 
@@ -75,4 +66,16 @@ resource "aws_subnet" "db_subnets" {
   tags = {
     Name = "${var.env}-db_subnets-${count.index+1}"
   }
+}
+resource "aws_route" "main" {
+  route_table_id            = aws_vpc.main.main_route_table_id                                              #var.default_rt_ID
+  destination_cidr_block    = var.default_vpc_cidr_block
+  vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
+}
+
+
+resource "aws_route" "default" {
+  route_table_id            = var.default_rt_ID
+  destination_cidr_block    = var.vpc_cidr_block
+  vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
 }
