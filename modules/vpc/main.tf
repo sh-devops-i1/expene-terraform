@@ -57,6 +57,20 @@ resource "aws_subnet" "backend_subnet" {
   }
 }
 
+resource "aws_route_table" "backend-rt" {
+  count             = length(var.backend_subnets)
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block = var.default_vpc_cidr_block
+    vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
+  }
+  tags = {
+    Name = "${var.env}-backend-rt-${count.index + 1}"
+  }
+}
+
+
+
 resource "aws_subnet" "db_subnets" {
   count             = length(var.db_subnets)
   vpc_id            = aws_vpc.main.id
@@ -67,6 +81,43 @@ resource "aws_subnet" "db_subnets" {
     Name = "${var.env}-db_subnets-${count.index+1}"
   }
 }
+
+resource "aws_route_table" "db-rt" {
+  count             = length(var.db_subnets)
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block = var.default_vpc_cidr_block
+    vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
+  }
+  tags = {
+    Name = "${var.env}-db-rt-${count.index + 1}"
+  }
+}
+
+resource "aws_subnet" "public_subnets" {
+  count             = length(var.public_subnet)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.public_subnet[count.index]
+  availability_zone = var.Availability_zones[count.index]
+
+  tags = {
+    Name = "${var.env}-public_subnet-${count.index+1}"
+  }
+}
+
+resource "aws_route_table" "public-rt" {
+  count             = length(var.public_subnet)
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block = var.default_vpc_cidr_block
+    vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
+  }
+  tags = {
+    Name = "${var.env}-public-rt-${count.index + 1}"
+  }
+}
+
+
 resource "aws_route" "main" {
   route_table_id            = aws_vpc.main.main_route_table_id                                              #var.default_rt_ID
   destination_cidr_block    = var.default_vpc_cidr_block
