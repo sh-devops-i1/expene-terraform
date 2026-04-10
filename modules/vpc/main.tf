@@ -16,6 +16,22 @@ resource "aws_vpc_peering_connection" "peer" {
   }
 }
 
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "${var.env}-igw"
+  }
+}
+
+resource "aws_route_table" "r" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "test-rt"
+  }
+}
+
 resource "aws_route" "main" {
   route_table_id            = aws_vpc.main.main_route_table_id                                              #var.default_rt_ID
   destination_cidr_block    = var.default_vpc_cidr_block
