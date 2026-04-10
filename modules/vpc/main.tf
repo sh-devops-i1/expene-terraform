@@ -92,6 +92,10 @@ resource "aws_route_table" "backend-rt" {
     cidr_block = var.default_vpc_cidr_block
     vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
   }
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_nat_gateway.ngw[count.index].id
+  }
   tags = {
     Name = "${var.env}-backend-rt-${count.index + 1}"
   }
@@ -121,6 +125,10 @@ resource "aws_route_table" "db-rt" {
   route {
     cidr_block = var.default_vpc_cidr_block
     vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
+  }
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_nat_gateway.ngw[count.index].id
   }
   tags = {
     Name = "${var.env}-db-rt-${count.index + 1}"
