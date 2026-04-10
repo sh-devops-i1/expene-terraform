@@ -23,6 +23,20 @@ resource "aws_internet_gateway" "igw" {
     Name = "${var.env}-igw"
   }
 }
+resource "aws_eip" "eip" {
+  domain   = "vpc"
+}
+
+resource "aws_nat_gateway" "ngw" {
+  count             = length(var.public_subnet)
+  allocation_id = aws_eip.eip.id
+  subnet_id     = aws_subnet.public_subnets[count.index].id
+
+  tags = {
+    Name = "gw NAT"
+  }
+}
+
 
 resource "aws_subnet" "frontend_subnet" {
   count             = length(var.frontend_subnets)
@@ -37,10 +51,17 @@ resource "aws_subnet" "frontend_subnet" {
 resource "aws_route_table" "frontend-rt" {
   count             = length(var.frontend_subnets)
   vpc_id = aws_vpc.main.id
+
   route {
     cidr_block = var.default_vpc_cidr_block
     vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
   }
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_nat_gateway.ngw.id
+  }
+
+
   tags = {
     Name = "${var.env}-frontend-rt-${count.index + 1}"
   }
