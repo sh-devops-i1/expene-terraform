@@ -1,25 +1,29 @@
-# module "frontend" {
-#   depends_on = [module.backend]
-#
-#   source = "./modules/apps"
-#   env    = var.env
-#   instance_type = var.instance_type
-#   component = "frontend"
-#   zone_id = var.zone_id
-#   vault_token   = var.vault_token
-#
-# }
-# module "backend" {
-#   depends_on = [module.mysql]
-#
-#   source = "./modules/apps"
-#   env    = var.env
-#   instance_type = var.instance_type
-#   component = "backend"
-#   zone_id = var.zone_id
-#   vault_token   = var.vault_token
-#
-# }
+module "frontend" {
+  depends_on = [module.backend]
+
+  source = "./modules/apps"
+  env    = var.env
+  instance_type = var.instance_type
+  component = "frontend"
+  zone_id = var.zone_id
+  vault_token   = var.vault_token
+  vpc_id        = module.vpc.vpc_id
+  subnet       = module.vpc.frontend_subnet
+
+}
+module "backend" {
+  depends_on = [module.mysql]
+
+  source = "./modules/apps"
+  env    = var.env
+  instance_type = var.instance_type
+  component = "backend"
+  zone_id = var.zone_id
+  vault_token   = var.vault_token
+  vpc_id        = module.vpc.vpc_id
+  subnet       = module.vpc.backend_subnet
+
+}
 module "mysql" {
   source        = "./modules/apps"
   env           = var.env
