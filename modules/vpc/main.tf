@@ -24,16 +24,17 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 resource "aws_eip" "eip" {
+  count    = length(var.public_subnet)
   domain   = "vpc"
 }
 
 resource "aws_nat_gateway" "ngw" {
   count             = length(var.public_subnet)
-  allocation_id = aws_eip.eip.id
+  allocation_id = aws_eip.eip[count.index].id
   subnet_id     = aws_subnet.public_subnets[count.index].id
 
   tags = {
-    Name = "gw NAT"
+    Name = "${var.env}-ngw-${count.index +1}"
   }
 }
 
