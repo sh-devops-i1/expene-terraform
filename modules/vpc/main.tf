@@ -28,7 +28,7 @@ resource "aws_route" "default" {
   vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
 }
 
-resource "aws_subnet" "frontend_main" {
+resource "aws_subnet" "frontend_subnet" {
   count             = length(var.frontend_subnets)
   vpc_id            = aws_vpc.main.id
   cidr_block        = var.frontend_subnets[count.index]
