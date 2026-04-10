@@ -12,7 +12,7 @@ terraform {
 }
 
 resource "aws_security_group" "main-sg" {
-  name               = "sg"
+  name               = "${var.component}-${var.env}-sg"
   vpc_id             = var.vpc_id
 
   egress {
@@ -29,7 +29,9 @@ resource "aws_security_group" "main-sg" {
     cidr_blocks      = ["0.0.0.0/0"]
 
   }
-
+  tags = {
+    Name = "${var.component}-${var.env}-sg"
+  }
 }
 
 resource "aws_instance" "instance" {
