@@ -118,11 +118,11 @@ resource "aws_route_table" "public-rt" {
 }
 
 
-resource "aws_route" "main" {
-  route_table_id            = aws_vpc.main.main_route_table_id                                              #var.default_rt_ID
-  destination_cidr_block    = var.default_vpc_cidr_block
-  vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
-}
+# resource "aws_route" "main" {
+#   route_table_id            = aws_vpc.main.main_route_table_id                                              #var.default_rt_ID
+#   destination_cidr_block    = var.default_vpc_cidr_block
+#   vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
+# }
 
 
 resource "aws_route" "default" {
