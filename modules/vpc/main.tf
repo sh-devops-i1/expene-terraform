@@ -46,6 +46,12 @@ resource "aws_route_table" "frontend-rt" {
   }
 }
 
+resource "aws_route_table_association" "frontend" {
+  count             = length(var.frontend_subnets)
+  subnet_id      = aws_subnet.frontend_subnet[count.index].id
+  route_table_id = aws_route_table.frontend-rt[count.index].id
+}
+
 resource "aws_subnet" "backend_subnet" {
   count             = length(var.backend_subnets)
   vpc_id            = aws_vpc.main.id
@@ -69,6 +75,11 @@ resource "aws_route_table" "backend-rt" {
   }
 }
 
+resource "aws_route_table_association" "backend" {
+  count             = length(var.backend_subnets)
+  subnet_id      = aws_subnet.backend_subnet[count.index].id
+  route_table_id = aws_route_table.backend-rt[count.index].id
+}
 
 
 resource "aws_subnet" "db_subnets" {
@@ -94,6 +105,13 @@ resource "aws_route_table" "db-rt" {
   }
 }
 
+resource "aws_route_table_association" "db" {
+  count             = length(var.db_subnets)
+  subnet_id      = aws_subnet.db_subnets[count.index].id
+  route_table_id = aws_route_table.db-rt[count.index].id
+}
+
+
 resource "aws_subnet" "public_subnets" {
   count             = length(var.public_subnet)
   vpc_id            = aws_vpc.main.id
@@ -116,6 +134,13 @@ resource "aws_route_table" "public-rt" {
     Name = "${var.env}-public-rt-${count.index + 1}"
   }
 }
+
+resource "aws_route_table_association" "public" {
+  count             = length(var.public_subnet)
+  subnet_id      = aws_subnet.public_subnets[count.index].id
+  route_table_id = aws_route_table.public-rt[count.index].id
+}
+
 
 
 # resource "aws_route" "main" {
