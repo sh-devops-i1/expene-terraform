@@ -85,7 +85,7 @@ resource "aws_lb" "lb" {
   internal           = var.lb_type == "public" ? true : false
   load_balancer_type = "application"
   security_groups = [aws_security_group.main-sg.id]
-  subnets            = var.lb_subnet[count.index]
+  subnets            = var.lb_subnet
 
   tags = {
     Environment = "${var.env}-${var.component}-alb"
