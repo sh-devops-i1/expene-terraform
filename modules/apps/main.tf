@@ -95,7 +95,6 @@ resource "aws_lb" "main" {
 resource "aws_lb_target_group" "main"{
   count              = var.lb_needed ? 1 : 0
   name        = "${var.env}-${var.component}-tg"
-  target_type = "alb"
   port        = 80
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
