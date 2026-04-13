@@ -57,7 +57,7 @@ resource "aws_route53_record" "record" {
 resource "null_resource" "ansible" {
   connection {
     type        = "ssh"
-    host        = aws_instance.instance.public_ip
+    host        = aws_instance.instance.private_ip
     user        = jsondecode(data.vault_generic_secret.mypass.data_json).ansible_user
     password    = jsondecode(data.vault_generic_secret.mypass.data_json).ansible_password
   }
@@ -76,3 +76,5 @@ resource "null_resource" "ansible" {
     ]
   }
 }
+
+
