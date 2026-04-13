@@ -79,7 +79,7 @@ resource "null_resource" "ansible" {
 }
 
 
-resource "aws_lb" "lb" {
+resource "aws_lb" "main" {
   count              = var.lb_needed ? 1 : 0
   name               = "${var.env}-${var.component}-alb"
   internal           = var.lb_type == "public" ? true : false
@@ -90,4 +90,13 @@ resource "aws_lb" "lb" {
   tags = {
     Environment = "${var.env}-${var.component}-alb"
   }
+}
+
+resource "aws_lb_target_group" "main"{
+  count              = var.lb_needed ? 1 : 0
+  name        = "${var.env}-${var.component}-alb"
+  target_type = "alb"
+  port        = 80
+  protocol    = "TCP"
+  vpc_id      = var.vpc_id
 }
