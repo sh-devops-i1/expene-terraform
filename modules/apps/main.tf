@@ -79,3 +79,15 @@ resource "null_resource" "ansible" {
 }
 
 
+resource "aws_lb" "lb" {
+  count              = var.lb_needed ? 1 : 0
+  name               = "${var.env}-${var.component}-alb"
+  internal           = var.lb_type == "public" ? true : false
+  load_balancer_type = "application"
+  security_groups = [aws_security_group.main-sg.id]
+  subnets            = var.lb_subnet[count.index]
+
+  tags = {
+    Environment = "${var.env}-${var.component}-alb"
+  }
+}
