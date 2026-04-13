@@ -72,7 +72,7 @@ resource "null_resource" "ansible" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo pip3.11 install ansible hvac",
+      "rm -f ~/secrets.json ~/app.json"
     ]
   }
 }
