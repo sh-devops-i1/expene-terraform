@@ -5,7 +5,7 @@ data "aws_ami" "ami" {
 
 }
 
-# data "vault_generic_secret" "mypass"{
-#   path = "common/common"
-# }
+data "vault_generic_secret" "mypass"{
+   path = "common/common"
+ }
 #
