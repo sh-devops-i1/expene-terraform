@@ -120,6 +120,7 @@ resource "aws_lb_target_group" "main"{
   }
 
 }
+
 resource "aws_lb_target_group_attachment" "main" {
   count              = var.lb_needed ? 1 : 0
   target_group_arn = aws_lb_target_group.main[0].arn
