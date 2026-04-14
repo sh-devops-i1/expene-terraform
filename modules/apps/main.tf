@@ -90,7 +90,7 @@ resource "aws_route53_record" "load-balancer" {
 
 resource "aws_lb" "main" {
   count              = var.lb_needed ? 1 : 0
-  name               = "${var.env}-${var.component}-alb"
+  name               = "${var.component}-${var.env}--alb"
   internal           = var.lb_type == "public" ? true : false
   load_balancer_type = "application"
   security_groups = [aws_security_group.main-sg.id]
