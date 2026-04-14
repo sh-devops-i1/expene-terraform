@@ -46,14 +46,6 @@ resource "aws_instance" "instance" {
   }
 }
 
-resource "aws_route53_record" "record" {
-  name    = "${var.component}-${var.env}"
-  type    = "A"
-  zone_id = var.zone_id
-  records = [aws_instance.instance.private_ip]
-  ttl     = 30
-}
-
 resource "null_resource" "ansible" {
   connection {
     type        = "ssh"
@@ -78,6 +70,23 @@ resource "null_resource" "ansible" {
   }
 }
 
+resource "aws_route53_record" "server" {
+  count   = var.lb_needed ? 0 : 1
+  name    = "${var.component}-${var.env}"
+  type    = "A"
+  zone_id = var.zone_id
+  records = [aws_instance.instance.private_ip]
+  ttl     = 30
+}
+
+resource "aws_route53_record" "load-balancer" {
+  count   = var.lb_needed ? 1 : 0
+  name    = "${var.component}-${var.env}"
+  type    = "CNAME"
+  zone_id = var.zone_id
+  records = [aws_lb.main[0].dns_name]
+  ttl     = 30
+}
 
 resource "aws_lb" "main" {
   count              = var.lb_needed ? 1 : 0
